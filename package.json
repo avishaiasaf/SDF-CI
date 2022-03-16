@@ -1,0 +1,28 @@
+{
+  "name": "ci-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "suitecloud.config.js",
+  "scripts": {
+    "test": "jest",
+    "deployfile": "node ci/deploy.js $(git diff --name-only --diff-filter=d $CI_MERGE_REQUEST_TARGET_BRANCH_SHA $CI_MERGE_REQUEST_SOURCE_BRANCH_SHA)",
+    "validate": "if [ -s src/deploy.xml ]; then npm run sdfdeploysoft; else echo \"no files/objects to deploy\"; fi;",
+    "deploy": "if [ -s src/deploy.xml ]; then npm run sdfdeploy; else echo \"no files/objects to deploy\"; fi;",
+    "sdfdeploysoft": "node ci/sdfauth.js && suitecloud project:adddependencies && suitecloud project:validate --server && suitecloud project:deploy --dryrun",
+    "sdfdeploy": "node ci/sdfauth.js && suitecloud project:adddependencies && suitecloud project:validate --server && suitecloud project:deploy",
+    "deploylocal": "node ci/deploy.js $(git diff --name-only --diff-filter=d $(git rev-parse origin/master) $(git rev-parse HEAD@{0}))"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avishaiasaf/SDF-CI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/avishaiasaf/SDF-CI/issues"
+  },
+  "homepage": "https://github.com/avishaiasaf/SDF-CI#readme",
+  "devDependencies": {
+    "@oracle/suitecloud-unit-testing": "^1.1.6"
+  }
+}
